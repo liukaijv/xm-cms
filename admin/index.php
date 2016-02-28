@@ -8,9 +8,9 @@ $ret_url = isset($_GET['ret_url']) && !empty($_GET['ret_url']) ? rawurldecode($_
 /*登录动作*/
 if ($act == "login") {
     if (IS_POST) {
-        $adminname = trim($_POST['admin_username']);
-        $adminpwd = trim($_POST['admin_userpwd']);
-        if (empty($adminname) || empty($adminpwd)) {
+        $admin_username = trim($_POST['admin_username']);
+        $admin_pwd = trim($_POST['admin_userpwd']);
+        if (empty($admin_username) || empty($admin_pwd)) {
             showMsg("请填写用户名密码！", 3);
         }
         /*若启用了验证码*/
@@ -22,7 +22,7 @@ if ($act == "login") {
             }
         }
         /*执行登录操作*/
-        if ($admin_info = $web->do_login($adminname, $adminpwd)) {
+        if ($admin_info = $web->do_login($admin_username, $admin_pwd)) {
             $_SESSION['admin_info'] = $admin_info;
             logs("登陆成功！");
             $links[] = array('text' => "进入系统", 'href' => 'index.php');
@@ -79,7 +79,7 @@ elseif ($act == "logout") {
         }
         $smarty->display("index.htm");
     } else {
-        my_header("location: index.php?act=loginout");
+        my_header("location: index.php?act=logout");
     }
 }
 
