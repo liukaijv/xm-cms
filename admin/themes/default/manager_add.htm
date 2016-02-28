@@ -1,0 +1,88 @@
+{include file="_header.htm"}
+
+<div class="head clearfix">
+	<div class="breadcrumb fl">					
+		<a href="javascript:">首页</a> /
+		<a href="javascript:">管理员管理</a>									
+	</div>	
+</div>
+
+<!-- content -->			
+<div class="content">
+	
+	<div class="block">
+		<form action="manager.php?act={$smarty.get.act}&page={$smarty.get.page}&id={$smarty.get.id}" method="post">
+
+		<div class="block_hd">
+			<h2>{if $smarty.get.id}编辑{else}添加{/if}→管理员</h2>
+			<ul class="bottons fr">
+				<li>
+					<a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新" data-placement="left">
+						刷新 <span class="icon-refresh"></span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+						收起 <span class="icon-chevron-down "></span>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:" onclick="window.history.go(-1);" class="tip" data-original-title="返回上一页" data-placement="left">
+						返回 <span class="icon-reply"></span>
+					</a>
+				</li>																
+			</ul>
+			<div class="clr"></div>	
+		</div>		
+
+		<div class="block_bd">
+			<table class="form_table">
+				<tr>
+					<td width="12%">用户名</td>
+					<td>
+						<input type="text" class="input_text w200" placeholder="用户名" name="admin_username" value="{$admin.admin_username}">
+					</td>
+				</tr>
+				<tr>
+					<td width="12%">真实姓名</td>
+					<td>
+						<input type="text" class="input_text w200" placeholder="真实姓名" name="real_name" value="{$admin.real_name}">
+					</td>
+				</tr>
+				<tr>
+					<td>密码</td>
+					<td>
+						<input type="password" class="input_text w200" placeholder="密码" name="admin_userpwd" value="">
+						<span class="help-inline">{if $smarty.get.id}留空则不修改密码!{/if}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>邮箱</td>
+					<td>						
+						<input type="text" class="input_text w200" placeholder="邮箱" name="email" value="{$admin.email}">				
+					</td>
+				</tr>
+				<tr>
+					<td>性别</td>
+					<td>						
+						<input type="radio" name="sex" value="男" {if $admin.sex eq '男' or !$admin.sex} checked="checked"{/if} class="radio_sty"/> 男 
+						<input type="radio" name="sex" value="女"{if $admin.sex eq '女'} checked="checked"{/if} class="radio_sty"/> 女			
+					</td>
+				</tr>								
+				
+			</table>
+		</div>			
+		<div class="block_ft">
+			<div class="p5">
+			<button type="submit" class="btn btn_primary">提交</button>
+			</div>
+		</div>
+
+		</form>			
+													
+	</div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

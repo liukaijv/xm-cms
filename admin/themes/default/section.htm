@@ -1,0 +1,133 @@
+{include file="_header.htm"}
+
+<div class="head clearfix">
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="javascript:">栏目管理</a>
+    </div>
+</div>
+
+<!-- content -->
+<div class="content">
+
+    <div class="block">
+        <div class="block_hd">
+            <h2>栏目管理</h2>
+            <ul class="bottons fr">
+                <li>
+                    <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                       data-placement="left">
+                        刷新 <span class="icon-refresh"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                        收起 <span class="icon-chevron-down "></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="section.php?pid={$smarty.get.pid}&act=add" class="tip" data-original-title="添加"
+                       data-placement="left">
+                        添加 <span class="icon-plus-sign "></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+        <div class="block_bd">
+            <table class="list_table">
+                <tr>
+                    <th width="15"><input type="checkbox" class="radio_sty" id="check_all"></th>
+                    <th width="35">编号</th>
+                    <th>栏目名称</th>
+                    <th>英文名称</th>
+                    <th>排序</th>
+                    <th width="80">操作</th>
+                </tr>
+                {if $menus}
+                {foreach from=$menus item=menu name=a}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="radio_sty" value="{$menu.menu_id}" name="cd_id[]"/>
+                    </td>
+                    <td>
+                        {$menu.menu_id}
+                    </td>
+                    <td>
+                        {if $menu.menu_name}{$menu.menu_name}{else}N/A{/if}
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'menu_name_en', '{$menu.menu_id}')"
+                              data-original-title="编辑">{if $menu.menu_name_en}{$menu.menu_name_en}{/if}</span>
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'sort_order', '{$menu.menu_id}' , 'int')"
+                              data-original-title="编辑">{$menu.sort_order}</span>
+                    </td>
+                    <td>
+                        <!-- <a href="section.php?pid={$menu.menu_id}&act=add" class="label label-success">添加子类</a> -->
+                        <a href="section.php?pid={$smarty.get.pid}&act=edit&id={$menu.menu_id}"
+                           class="label label-success">编辑</a>
+                        {if $smarty.foreach.a.first}
+                        <a href="javascript:;" id="{$menu.menu_id}-del" class="label label-success"
+                           onclick="return alert('第一个栏目不能删除')">删除</a>
+                        {else}
+                        <a href="javascript:;" id="{$menu.menu_id}-del" class="label label-success"
+                           onclick="return operation_one(this.id)">删除</a>
+                        {/if}
+                    </td>
+                </tr>
+                {if $menu.sub_menus}
+                {foreach from=$menu.sub_menus item=menu name=c}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="radio_sty" value="{$menu.menu_id}" name="cd_id[]"/>
+                    </td>
+                    <td>
+                        {$menu.menu_id}
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" style="padding-left:1em;"
+                              onclick="return edit(this, 'menu_name', '{$menu.menu_id}')" data-original-title="编辑">{if $menu.menu_name}{$menu.menu_name}{else}N/A{/if}</span>
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'menu_name_en', '{$menu.menu_id}')"
+                              data-original-title="编辑">{if $menu.menu_name_en}{$menu.menu_name_en}{else}N/A{/if}</span>
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'sort_order', '{$menu.menu_id}' , 'int')"
+                              data-original-title="编辑">{$menu.sort_order}</span>
+                    </td>
+                    <td>
+                        <a href="section_all.php?pid={$menu.menu_id}&act=add" class="label label-success">添加子类</a>
+                        <a href="section_all.php?pid={$menu.menu_id}&act=edit&id={$menu.menu_id}"
+                           class="label label-success">编辑</a>
+                        <a href="javascript:;" id="{$menu.menu_id}-del" class="label label-success"
+                           onclick="return operation_one(this.id)">删除</a>
+                    </td>
+                </tr>
+                {/foreach}
+                {/if}
+                {/foreach}
+                {/if}
+            </table>
+            <div class="table_action">
+                <div class="list_control fl">
+                    <a href="javascript:" id="select_all" class="btn">全选</a>
+                    <a href="javascript:" id="uncheck" class="btn">反选</a>
+                    <select class="select" id="action">
+                        <option value="">选择操作</option>
+                        <option value="del">删除</option>
+                    </select>
+                    <a href="javascript:" id="todo" class="btn">操作</a>
+                </div>
+                <div class="clr"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

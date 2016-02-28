@@ -1,0 +1,139 @@
+{include file="_header.htm"}
+{literal}
+<script charset="utf-8" src="../kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="../kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('textarea[name="art_content"]', {
+            allowFileManager: true,
+            width: "100%"
+        });
+    })
+</script>
+{/literal}
+
+<div class="head clearfix">
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="article.php?mid={$smarty.get.mid}">{$info.menu_name}</a>
+    </div>
+</div>
+
+<!-- content -->
+<div class="content">
+
+    <form action="article.php?mid={$smarty.get.mid}&act={$smarty.get.act}&page={$smarty.get.page}&id={$smarty.get.id}"
+          name="art_add" method="post" enctype="multipart/form-data">
+
+        <div class="block clearfix">
+            <div class="block_hd">
+                <h2>{if $smarty.get.id}编辑{else}添加{/if}→{$info.menu_name}</h2>
+                <ul class="bottons fr">
+                    <li>
+                        <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                           data-placement="left">
+                            刷新 <span class="icon-refresh"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                            收起 <span class="icon-chevron-down "></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="window.history.go(-1);" class="tip" data-original-title="添加文章"
+                           data-placement="left">
+                            返回 <span class="icon-reply"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clr"></div>
+            </div>
+            <div class="block_bd">
+
+                <table class="form_table">
+                    <tr>
+                        <td width="12%">文章标题</td>
+                        <td>
+                            <input type="text" class="input_text w260" placeholder="文章标题" name="art_title"
+                                   value="{$art.art_title}" maxlength="200">
+                            <span class="help-inline">请输入文章标题，不能为空</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>文章来源</td>
+                        <td>
+                            <input type="text" class="input_text w140" placeholder="文章来源" name="art_from"
+                                   value="{if $art.art_from}{$art.art_from}{else}本站{/if}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>文章作者</td>
+                        <td>
+                            <input type="text" class="input_text w140" placeholder="文章作者" name="art_author"
+                                   value="{if $art.art_author}{$art.art_author}{else}admin{/if}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>图片上传：</td>
+                        <td>
+                            <div class="upload_control">
+                                <input type="text" class="input_text w140 fl disable" disabled value="图片尺寸240*240"
+                                       id="filename">
+                                <input type="file" class="file_upload" name="default_image"
+                                       onchange="val=this.value;$('#filename').attr('value',val);">
+                                {if $art.default_image}
+                                <a href="javascript:" class="btn btn_default fl w60">重新上传</a>
+                                <a href="javascript:" class="btn btn_default fl w60"
+                                   onclick="{literal}TINY.box.show({image:{/literal}'../{$art.default_image}'{literal},opacity:10}){/literal}">查看图片</a>
+                                {else}
+                                <a href="javascript:" class="btn btn_default fl w60">上传图片</a>
+                                {/if}
+                                <div class="clr"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>添加时间</td>
+                        <td>
+                            <input type="text" class="input_text w140" name="add_time" value="{$art.add_time|date_format:"%Y-%m-%d %H:%M"}" readonly>
+                        </td>
+                    </tr>	 -->
+                    <tr>
+                        <td>点击次数</td>
+                        <td>
+                            <input type="text" class="input_text w60" placeholder="点击次数" name="view_times"
+                                   value="{if $art.view_times}{$art.view_times}{else}0{/if}">
+                            <span class="help-inline">只能输入整数</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>文章排序：</td>
+                        <td>
+                            <input type="text" class="input_text w60" name="sort_order"
+                                   value="{if $art.sort_order}{$art.sort_order}{else}255{/if}">
+                            <span class="help-inline">只能输入整数</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>文章内容：</td>
+                        <td>
+                            <textarea name="art_content" style="height:400px;">{$art.art_content}</textarea>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="block_ft">
+                <div class="p5">
+                    <button type="submit" class="btn btn_primary">提交</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+<!-- /content -->
+{include file="_footer.htm"}

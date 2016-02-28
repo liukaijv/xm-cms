@@ -1,0 +1,55 @@
+{include file="_header.htm"}
+
+<div class="msg_box">
+	<h2 class="f14">
+		 {if $msg_type eq 0}
+             <span class="icon-question-sign"></span>
+              {elseif $msg_type eq 1}
+              <span class="icon-ok-sign"></span>
+              {else}
+              <span class="icon-info-sign"></span>
+              {/if}
+			{$msg}
+	</h2>
+	<p> {if $auto_jump}如果<strong id="seconds">{$time}</strong>秒后没有操作将自动跳转…{/if}</p>
+	<p>
+		{foreach from=$links item=link}
+        <a href="{$link.href}">{$link.text}</a>
+        {/foreach}
+    </p>
+</div>
+{if $auto_jump}
+<script>
+var jump_timmer
+var seconds = {$time};
+var defaultUrl = "{$default_url}";
+
+window.load=msg();
+{literal}
+function msg(){
+	if (defaultUrl == 'javascript:history.go(-1)' && window.history.length == 0){
+		document.getElementById('auto_jump').innerHTML = '';
+		return;
+	}
+	jump_timmer=window.setInterval(auto_jump, 1000);
+}
+function auto_jump(){
+	if (seconds <= 0){
+		window.clearInterval(jump_timmer);
+		return;
+	}
+	seconds --;
+	document.getElementById('seconds').innerHTML = seconds;
+	if (seconds == 0){
+		window.clearInterval(jump_timmer);
+		location.href = defaultUrl;
+	}
+}
+{/literal}
+</script>
+
+{/if}
+
+
+{include file="_footer.htm"}
+

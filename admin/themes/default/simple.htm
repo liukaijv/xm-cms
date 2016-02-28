@@ -1,0 +1,64 @@
+{include file="_header.htm"}
+{literal}
+<script charset="utf-8" src="../kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="../kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('textarea[name="content"]', {
+            allowFileManager: true,
+            width: "100%"
+        });
+    })
+</script>
+{/literal}
+
+<div class="head clearfix">
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="simple.php?mid={$smarty.get.mid}">{$info.name}</a>
+    </div>
+</div>
+
+<!-- content -->
+<div class="content">
+
+    <div class="block">
+        <form action="simple.php?mid={$smarty.get.mid}" method="post">
+            <div class="block_hd">
+                <h2>编辑→{$info.name}</h2>
+                <ul class="bottons fr">
+                    <li>
+                        <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                           data-placement="left">
+                            刷新 <span class="icon-refresh"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                            收起 <span class="icon-chevron-down "></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clr"></div>
+            </div>
+
+            <div class="block_bd">
+                <div class="p10">
+                    <textarea name="content" style="height:400px;">{$info.content}</textarea>
+                </div>
+            </div>
+            <div class="block_ft">
+                <div class="p5">
+                    <button type="submit" class="btn btn_primary">提交</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

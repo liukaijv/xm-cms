@@ -1,0 +1,152 @@
+{include file="_header.htm"}
+{literal}
+<script charset="utf-8" src="../kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="../kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+    var editor;
+    KindEditor.ready(function (K) {
+        editor = K.create('textarea[name="foot_content"]', {
+            allowFileManager: true,
+            width: "100%"
+        });
+    })
+</script>
+{/literal}
+
+<div class="head clearfix">
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="javascript:">站点设置</a>
+    </div>
+</div>
+
+<!-- content -->
+<div class="content">
+    {if $smarty.get.act eq 'base'}
+    <div class="block">
+        <form action="setting.php" method="post">
+
+            <div class="block_hd">
+                <h2>站点设置</h2>
+                <ul class="bottons fr">
+                    <li>
+                        <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                           data-placement="left">
+                            刷新 <span class="icon-refresh"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                            收起 <span class="icon-chevron-down "></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="window.history.go(-1);" class="tip" data-original-title="返回上一页"
+                           data-placement="left">
+                            返回 <span class="icon-reply"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clr"></div>
+            </div>
+
+            <div class="block_bd">
+                <table class="form_table">
+                    <tr>
+                        <td width="12%">站点域名</td>
+                        <td>
+                            <input type="text" class="input_text w200" placeholder="用户名" name="site_domain"
+                                   value="{$CFG.site_domain}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="12%">联系邮箱</td>
+                        <td>
+                            <input type="text" class="input_text w200" placeholder="联系邮箱" name="site_email"
+                                   value="{$CFG.site_email}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="12%">联系电话</td>
+                        <td>
+                            <input type="text" class="input_text w200" placeholder="联系电话" name="site_tel"
+                                   value="{$CFG.site_tel}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="12%">企业传真</td>
+                        <td>
+                            <input type="text" class="input_text w200" placeholder="企业传真" name="site_fax"
+                                   value="{$CFG.site_fax}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="12%">联系手机</td>
+                        <td>
+                            <input type="text" class="input_text w200" placeholder="联系手机" name="site_phone"
+                                   value="{$CFG.site_phone}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="12%">公司地址</td>
+                        <td>
+                            <input type="text" class="input_text w440" placeholder="公司地址" name="site_company_address"
+                                   value="{$CFG.site_company_address}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="12%">联系QQ</td>
+                        <td>
+                            <input type="text" class="input_text w440" placeholder="联系QQ" name="site_qq"
+                                   value="{$CFG.site_qq}">
+                            <span class="help-inline">多个QQ号码请用竖线（|）隔开，号码与名称用半角逗号（,）隔开！</span>
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>备案信息</td>
+                        <td>
+                            <textarea rows="4" class="text_area w440" name="reply_content">{$CFG.site_copyright}</textarea>
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>站点标题</td>
+                        <td>
+                            <textarea rows="4" class="text_area w440" name="site_title">{$CFG.site_title}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>站点关键词</td>
+                        <td>
+                            <textarea rows="4" class="text_area w440" name="site_keyword">{$CFG.site_keyword}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>站点描述</td>
+                        <td>
+                            <textarea rows="4" class="text_area w440"
+                                      name="site_description">{$CFG.site_description}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>底部信息</td>
+                        <td>
+                            <textarea rows="6" class="text_area" name="foot_content">{$foot.content}</textarea>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="block_ft">
+                <div class="p5">
+                    <button type="submit" class="btn btn_primary">提交</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    {/if}
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

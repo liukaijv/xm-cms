@@ -1,0 +1,110 @@
+{include file="_header.htm"}
+
+<div class="head clearfix">
+	<div class="breadcrumb fl">					
+		<a href="javascript:">首页</a> /
+		<a href="feedback.php?mid={$smarty.get.mid}">{$info.menu_name}</a>									
+	</div>	
+</div>
+
+<!-- content -->			
+<div class="content">
+	
+	<div class="block">
+		<form action="feedback.php?mid={$smarty.get.mid}&act={$smarty.get.act}&page={$smarty.get.page}&id={$smarty.get.id}" method="post">
+
+		<div class="block_hd">
+			<h2>编辑→{$info.menu_name}</h2>
+			<ul class="bottons fr">
+				<li>
+					<a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新" data-placement="left">
+						刷新 <span class="icon-refresh"></span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+						收起 <span class="icon-chevron-down "></span>
+					</a>
+				</li>															
+			</ul>
+			<div class="clr"></div>	
+		</div>		
+
+		<div class="block_bd">
+			<table class="form_table">
+				<tr>
+					<td width="12%">客户名称</td>
+					<td>
+						{$feed.name}						
+					</td>
+				</tr>
+				<tr>
+					<td>性别</td>
+					<td>
+						{$feed.sex}					
+					</td>
+				</tr>
+				<tr>
+					<td>邮箱</td>
+					<td>
+						{$feed.email}					
+					</td>
+				</tr>
+				<tr>
+					<td>手机号码</td>
+					<td>
+						{$feed.phone}					
+					</td>
+				</tr>
+				<tr>
+					<td>电话号码</td>
+					<td>
+						{$feed.tel}					
+					</td>
+				</tr>
+				<tr>
+					<td>QQ</td>
+					<td>
+						{$feed.qq}					
+					</td>
+				</tr>
+				<tr>
+					<td>是否审核：</td>
+					<td>
+						<label><input type="checkbox" {if $feed.is_check}checked{/if} class="radio_sty" name="is_check"><span class="radio_label">显示</span></label>
+					</td>
+				</tr>
+				<tr>
+					<td>留言时间</td>
+					<td>
+						{$feed.add_time}
+					</td>
+				</tr>
+				<tr>
+					<td>留言内容</td>
+					<td>
+						{$feed.content}
+					</td>
+				</tr>
+				<tr>
+					<td>回复内容</td>
+					<td>
+						<textarea rows="4" class="text_area w380" name="reply_content">{$feed.reply_content}</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>			
+		<div class="block_ft">
+			<div class="p5">
+			<button type="submit" class="btn btn_primary">提交</button>
+			</div>
+		</div>
+
+		</form>			
+													
+	</div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

@@ -1,0 +1,120 @@
+{include file="_header.htm"}
+
+<div class="head clearfix">
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="javascript:">管理员管理</a>
+    </div>
+    <div class="search fr">
+        <form action="manager.php" method="get" name="search_form">
+            <input class="input_text span2 fl search_text" type="text" placeholder="search" name="keyword">
+            <button class="btn search_btn fl" type="submit">
+                <span class="icon-search"></span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- content -->
+<div class="content">
+
+    <div class="block">
+        <div class="block_hd">
+            <h2>管理→管理员管理</h2>
+            <ul class="bottons fr">
+                <li>
+                    <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                       data-placement="left">
+                        刷新 <span class="icon-refresh"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                        收起 <span class="icon-chevron-down "></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="manager.php?act=add" class="tip" data-original-title="添加" data-placement="left">
+                        添加 <span class="icon-plus-sign "></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+        <div class="block_bd">
+            <table class="list_table">
+                <tr>
+                    <th width="15"><input type="checkbox" class="radio_sty" id="check_all"></th>
+                    <th width="35">编号</th>
+                    <th>用户名</th>
+                    <th>真实姓名</th>
+                    <th>性别</th>
+                    <th>邮箱</th>
+                    <th>管理级别</th>
+                    <th>留言时间</th>
+                    <th width="80">操作</th>
+                </tr>
+                {if $admins}
+                {foreach from=$admins item=admin name=c}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="radio_sty" value="{$admin.admin_id}" name="cd_id[]"/>
+                    </td>
+                    <td>
+                        {$admin.admin_id}
+                    </td>
+                    <td>
+                        {$admin.admin_username}
+                    </td>
+                    <td>
+                        {$admin.real_name}
+                    </td>
+                    <td>
+                        {$admin.sex}
+                    </td>
+                    <td>
+                        {$admin.email}
+                    </td>
+                    <td>
+                        {if $admin.type_id}普通管理员{else}<span style="color:#FF0000;">超级管理员</span>{/if}
+                    </td>
+                    <td>
+                        {$admin.add_time|date_format:"%Y-%m-%d %H:%M"}
+                    </td>
+                    <td>
+                        <a href="manager.php?act=edit&id={$admin.admin_id}&page={$smarty.get.page}"
+                           class="label label-success">修改</a>
+                        <a href="javascript:" id="{$admin.admin_id}-del" class="label label-success"
+                           onclick="{if !$admin.type_id}alert('总管理员不能删除！');return false;{/if} return operation_one(this.id)">删除</a>
+                    </td>
+                </tr>
+                {/foreach}
+                {else}
+                <tr>
+                    <td colspan="9">暂时没有数据！</td>
+                </tr>
+                {/if}
+            </table>
+            <div class="table_action">
+                <div class="list_control fl">
+                    <a href="javascript:" id="select_all" class="btn">全选</a>
+                    <a href="javascript:" id="uncheck" class="btn">反选</a>
+                    <select class="select" id="action">
+                        <option value="">选择操作</option>
+                        <option value="del">删除</option>
+                    </select>
+                    <a href="javascript:" id="todo" class="btn">操作</a>
+                </div>
+                <div class="pagination fr">
+                    {$subpage.subpagehtml}
+                </div>
+                <div class="clr"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <!--[if lte IE 7]>
+    <script src="js/lte-ie7.js"></script><![endif]-->
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+    {literal}
+    <script>
+        $(function () {
+            $('input, textarea').placeholder();
+        });
+    </script>
+    {/literal}
+</head>
+
+<body style="background:#f5f5f5;">
+
+<div class="login_box">
+    <h2>登陆你的账户</h2>
+
+    <div class="login_form">
+        <form id="from" method="post" name="login" id="login">
+            <div class="login_control">
+                <label class="icon-user"></label>
+                <input type="text" class="input_text" placeholder="用户名" name="admin_username">
+            </div>
+            <div class="login_control">
+                <label class="icon-lock"></label>
+                <input type="password" class="input_text" placeholder="密码" name="admin_userpwd">
+            </div>
+            {if $CFG.captcha.e}
+            <div class="login_control">
+                <label class="icon-fire"></label>
+                <input type="text" class="input_text input_code" placeholder="验证码" name="captcha">
+                <img src="../includes/Captcha/code_back_login.php" border="0" title="点击刷新验证码"
+                     onclick="this.src='../includes/Captcha/code_back_login.php?m='+Math.random();" class="code_img"/>
+            </div>
+            {/if}
+            <div class="login_control clearfix">
+                <input type="submit" class="btn login_btn" value="提 交">
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+{include file="_header.htm"}
+
+<div class="head clearfix">
+	<div class="breadcrumb fl">					
+		<a href="javascript:">首页</a> /
+		<a href="case_image.php?mid={$smarty.get.mid}">{$info.menu_name}</a>
+	</div>
+	<div class="search fr">
+		<form action="case_image.php" method="get" name="search_form">
+			<input type="hidden" name="mid" value="{$smarty.get.mid}" />
+			<input class="input_text span2 fl search_text" type="text" placeholder="search" name="keyword">
+			<button class="btn search_btn fl" type="submit">
+				<span class="icon-search"></span>
+			</button>
+		</form>
+	</div>	
+</div>
+
+<!-- content -->			
+<div class="content">
+	
+	<div class="block">
+		<div class="block_hd">
+			<h2>管理→{$info.menu_name}</h2>
+			<ul class="bottons fr">
+				<li>
+					<a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新" data-placement="left">
+						刷新 <span class="icon-refresh"></span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+						收起 <span class="icon-chevron-down "></span>
+					</a>
+				</li>
+				<li>
+					<a href="case_image.php?mid={$smarty.get.mid}&act=add" class="tip" data-original-title="添加" data-placement="left">
+						添加 <span class="icon-plus-sign "></span>
+					</a>
+				</li>								
+			</ul>
+			<div class="clr"></div>	
+		</div>
+		<div class="block_bd">
+			<table class="list_table">
+				<tr>
+					<th width="15"><input type="checkbox" class="radio_sty" id="check_all"></th>
+					<th width="35">编号</th>
+					<th>案例名称</th>
+					<th>作者</th>
+					<th>来源</th>
+					<th>置顶</th>
+					<th>推荐</th>
+					<th>封面图片</th>
+					<th width="35">排序</th>					
+					<th width="100">时间</th>
+					<th width="80">操作</th>
+				</tr>
+				{if $cases}
+				{foreach from=$cases item=case name=c}
+				<tr>
+					<td>
+						<input type="checkbox" class="radio_sty" value="{$case.case_id}" name="cd_id[]" />
+					</td>
+					<td>
+						{$case.case_id}
+					</td>
+					<td>
+						<span class="ajax_edit tip" onclick="return edit(this, 'case_name', '{$case.case_id}')" data-original-title="编辑">{if $case.case_name}{$case.case_name}{/if}</span>
+					</td>
+					<td>
+						<span class="ajax_edit tip" onclick="return edit(this, 'author', '{$case.case_id}')" data-original-title="编辑">{if $case.author}{$case.author}{else}N/A{/if}</span>
+						
+					</td>
+					<td>
+						<span class="ajax_edit tip" onclick="return edit(this, 'author', '{$case.case_id}')" data-original-title="编辑">{if $case.from}{$case.from}{else}N/A{/if}</span>						
+					</td>
+					<td>
+						<span class="{if $case.is_top}icon-ok{else}icon-remove{/if}" id="{$case.case_id}-top" onclick="return change(this.id);"></span>
+					</td>
+					<td>
+						<span class="{if $case.is_recom}icon-ok{else}icon-remove{/if}" id="{$case.case_id}-recom" onclick="return change(this.id);"></span>
+					</td>
+					<td>
+						<span class="label label-success img_preview tip" data-original-title="点击预览" onclick="{literal}TINY.box.show({image:{/literal}'../{$case.default_image}'{literal},opacity:10}){/literal}">预览</span>
+					</td>
+					<td>
+						<span class="ajax_edit tip" onclick="return edit(this, 'sort_order', '{$case.case_id}' , 'int')" data-original-title="编辑">{$case.sort_order}</span>
+					</td>
+					<td>
+						{$case.add_time|date_format:"%Y-%m-%d %H:%M"}
+					</td>					
+					<td>						
+						<a href="case_image.php?mid={$smarty.get.mid}&act=edit&id={$case.case_id}&page={$smarty.get.page}" class="label label-success">编辑</a>
+						<a href="javascript:;" id="{$case.case_id}-del" class="label label-success" onclick="return operation_one(this.id)">删除</a>
+					</td>
+				</tr>					
+				{/foreach}
+				{else}
+					<tr>
+			        	<td colspan="11">暂时没有数据！</td>
+			        </tr>
+				{/if}				
+			</table>
+			<div class="table_action">
+				<div class="list_control fl">
+					<a href="javascript:" id="select_all" class="btn">全选</a>
+					<a href="javascript:" id="uncheck" class="btn">反选</a>
+					<select class="select" id="action">
+						<option value="">选择操作</option>
+            			<option value="del">删除</option>
+					</select>
+					<a href="javascript:" id="todo" class="btn">操作</a>
+				</div>
+				<div class="pagination fr">				
+				{$subpage.subpagehtml}
+				</div>
+				<div class="clr"></div>								
+			</div>
+			
+		</div>												
+	</div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}

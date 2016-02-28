@@ -1,0 +1,219 @@
+{include file="_header.htm"}
+{literal}
+<script src="js/ajaxupload.js"></script>
+<script charset="utf-8" src="../kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="../kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="detail"]', {
+		allowFileManager : true,
+		width:"100%"
+	});
+});
+$(document).ready(function(){	
+	var button = $('#upbtn'), interval; 	  
+	new AjaxUpload(button, {
+		action: 'uploadify.php?file=case',    
+		name: 'myfile',                       
+		onSubmit : function(file, ext){			
+			if (ext && /^(jpg|png|jpeg|gif)$/.test(ext)){ 								
+			} else {					                           
+				alert("只允许上传图片文件！");
+				return false;				
+			}			
+			button.text('正在上传图片，请等待');  		
+			this.disable();                      
+													
+			interval = window.setInterval(function(){
+				var text = button.text();
+				if (text.length < 13){
+					button.text(text + '.');					
+				} else {
+					button.text('正在上传图片，请等待');			
+				}
+			}, 400);
+		},
+		onComplete: function(file, response){        
+			button.text('我要上传，点击此按钮上传图片');			
+			window.clearInterval(interval);         	
+			this.enable();                         
+			// alert(response);                       
+			if(response!="error"){                  
+				rand=parseInt(999*Math.random()+1);
+				upname=response.split("-and-");
+				imgpath="../uploadfile/case/thumb_"+upname[1];
+				$('.content_gallery_list').append("<li id=\"img"+rand+"\"><img src=\""+imgpath+"\" name=\""+upname[1]+"\"><a class=\"preview_pic icon-zoom-in\" onclick=\"TINY.box.show({image:\'../uploadfile/case/"+upname[1]+"\',opacity:10})\"></a><a name=\""+upname[1]+"\" class=\"del_pic icon-remove\" onclick=\"return del_image(this.name,'img"+rand+"')\"></a></li>");	
+			}else{                                 
+				alert('上传失败！')
+			}				
+		}
+	});
+})
+function del_image(name,tabid){	
+	if(tabid&&name){
+		$.ajax({
+			data:"act=del&file=case&name="+name+"&rd="+Math.random(),
+			type:"get",
+			url:"uploadify.php",
+			dataType:"html",
+			cache:false,
+			success:function(msg){
+				if(msg==1){
+					alert('删除成功，点击保存后生效！');
+					$("#"+tabid).remove();
+				}
+			}
+		});
+	}
+}
+function get_image(){
+	img='';
+	$(".content_gallery_list img").each(function(){
+		img+=$(this).attr("name")+'|';
+	})
+	if(img){
+		$("#images").html(img);
+	}
+}
+</script>
+{/literal}
+
+<div class="head clearfix">
+	<div class="breadcrumb fl">					
+		<a href="javascript:">首页</a> /
+		<a href="case_image.php?mid={$smarty.get.mid}">{$info.menu_name}</a>									
+	</div>	
+</div>
+
+<!-- content -->			
+<div class="content">
+
+	 <form action="case_image.php?mid={$smarty.get.mid}&act={$smarty.get.act}&page={$smarty.get.page}&id={$smarty.get.id}" method="post" enctype="multipart/form-data">
+
+	<div class="block clearfix">
+		<div class="block_hd">
+			<h2>{if $smarty.get.id}编辑{else}添加{/if}→{$info.menu_name}</h2>
+			<ul class="bottons fr">
+				<li>
+					<a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新" data-placement="left">
+						刷新 <span class="icon-refresh"></span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+						收起 <span class="icon-chevron-down "></span>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:" onclick="window.history.go(-1);" class="tip" data-original-title="添加案例" data-placement="left">
+						返回 <span class="icon-reply"></span>
+					</a>
+				</li>								
+			</ul>
+			<div class="clr"></div>	
+		</div>
+		<div class="block_bd">
+
+			<table class="form_table">
+				<tr>
+					<td width="12%">案例名称</td>
+					<td>
+						<input type="text" class="input_text w260" placeholder="名称" name="case_name" value="{$case.case_name}" maxlength="200">
+						<span class="help-inline">请输入名称，不能为空</span>
+					</td>
+				</tr>
+				<tr>
+					<td>来源</td>
+					<td>
+						<input type="text" class="input_text w140" placeholder="来源" name="from" value="{$case.from}">
+					</td>
+				</tr>
+				<tr>
+					<td>作者</td>
+					<td>
+						<input type="text" class="input_text w140" placeholder="作者" name="author" value="{$case.author}">
+					</td>
+				</tr>
+				<tr>
+					<td>图片上传</td>
+					<td>
+						<div class="upload_control">
+						<input type="text" class="input_text w140 fl disable" disabled value="图片尺寸240*240" id="filename">
+						<input type="file" class="file_upload" name="default_image"  onchange="val=this.value;$('#filename').attr('value',val);">
+						{if $case.default_image}
+						<a href="javascript:" class="btn btn_default fl w60">重新上传</a>
+						<a href="javascript:" class="btn btn_default fl w60" onclick="{literal}TINY.box.show({image:{/literal}'../{$case.default_image}'{literal},opacity:10}){/literal}">查看图片</a>
+						{else}
+						<a href="javascript:" class="btn btn_default fl w60">上传图片</a>	
+						{/if}
+						<span class="help-inline">请上传一张封面图片，不能为空</span>					
+						<div class="clr"></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>多图上传：</td>
+					<td>
+						<div class="muti_upload_control">
+							<button class="btn btn_default fl" id="upbtn">我要上传，点击此按钮上传图片</button>
+							<span class="help-inline">图片尺寸150*115</span>
+							</div>
+							<div class="content_gallery">
+								<ul class="content_gallery_list">
+									{if $case.images}
+									{foreach from=$case.images item=img name=i}
+									<li id="img{$smarty.foreach.i.iteration}">
+										<img src="../uploadfile/case/thumb_{$img}" name="{$img}">
+										<a class="preview_pic icon-zoom-in" onclick="{literal}TINY.box.show({image:{/literal}'../uploadfile/case/{$img}'{literal},opacity:10}){/literal}"></a>
+										<a name="{$img}" class="del_pic icon-remove" onclick="return del_image(this.name,'img{$smarty.foreach.i.iteration}')"></a>
+									</li>
+									{/foreach}
+									{/if}											
+								</ul>
+							</div>
+							<textarea name="images" id="images" class="hide"></textarea>
+						</div>
+						</td>
+					</tr>
+				<!-- <tr>
+					<td>添加时间</td>
+					<td>
+						<input type="text" class="input_text w140" name="add_time" value="{$case.add_time|date_format:"%Y-%m-%d %H:%M"}" readonly>						
+					</td>
+				</tr>	 -->
+				<tr>
+					<td>点击次数</td>
+					<td>
+						<input type="text" class="input_text w60" placeholder="点击次数" name="view_times" value="{if $case.view_times}{$case.view_times}{else}0{/if}">
+						<span class="help-inline">只能输入整数</span>
+					</td>
+				</tr>	
+				<tr>
+					<td>产品排序</td>
+					<td>
+						<input type="text" class="input_text w60" name="sort_order" value="{if $case.sort_order}{$case.sort_order}{else}255{/if}">									
+						<span class="help-inline">只能输入整数</span>		
+					</td>
+				</tr>
+				<tr>
+					<td>产品详情</td>
+					<td>
+						<textarea name="detail" style="height:400px;">{$case.detail}</textarea>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+		<div class="block_ft">
+			<div class="p5">
+			<button type="submit" class="btn btn_primary" onclick="return get_image();">提交</button>
+			</div>
+		</div>		
+	</div>
+
+	</form>
+	
+</div>
+<!-- /content -->
+{include file="_footer.htm"}

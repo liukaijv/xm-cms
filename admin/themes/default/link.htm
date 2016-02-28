@@ -1,0 +1,120 @@
+{include file="_header.htm"}
+
+<div class="head clearfix">
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="javascript:">{if $smarty.get.cate_id eq 1}友情链接{else}合作伙伴{/if}</a>
+    </div>
+    <div class="search fr">
+        <form action="link.php" method="get" name="search_form">
+            <input class="input_text span2 fl search_text" type="text" placeholder="search" name="keyword">
+            <button class="btn search_btn fl" type="submit">
+                <span class="icon-search"></span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- content -->
+<div class="content">
+
+    <div class="block">
+        <div class="block_hd">
+            <h2>管理→{if $smarty.get.cate_id eq 1}友情链接{else}合作伙伴{/if}</h2>
+            <ul class="bottons fr">
+                <li>
+                    <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                       data-placement="left">
+                        刷新 <span class="icon-refresh"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                        收起 <span class="icon-chevron-down "></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="link.php?act=add&cate_id={$smarty.get.cate_id}" class="tip" data-original-title="添加"
+                       data-placement="left">
+                        添加 <span class="icon-plus-sign "></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="clr"></div>
+        </div>
+        <div class="block_bd">
+            <table class="list_table">
+                <tr>
+                    <th width="15"><input type="checkbox" class="radio_sty" id="check_all"></th>
+                    <th width="35">编号</th>
+                    <th>链接名称</th>
+                    <th>所属类别</th>
+                    <th>链接地址</th>
+                    <th>排序</th>
+                    <th width="150">发布时间</th>
+                    <th width="80">操作</th>
+                </tr>
+                {if $links}
+                {foreach from=$links item=link name=c}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="radio_sty" value="{$link.lid}" name="cd_id[]"/>
+                    </td>
+                    <td>
+                        {$link.lid}
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'name', '{$link.lid}')"
+                              data-original-title="编辑">{$link.name}</span>
+                    </td>
+                    <td>
+                        {if $link.cate_id eq 1}友情链接{else}合作伙伴{/if}
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'url', '{$link.lid}','url')"
+                              data-original-title="编辑">{$link.url}</span>
+                    </td>
+                    <td>
+                        <span class="ajax_edit tip" onclick="return edit(this, 'sort_order', '{$link.lid}','int')"
+                              data-original-title="编辑">{$link.sort_order}</span>
+                    </td>
+                    <td>
+                        {$link.add_time|date_format:"%Y-%m-%d %H:%M"}
+                    </td>
+                    <td>
+                        <a href="link.php?act=edit&id={$link.lid}&cate_id={$link.cate_id}&page={$smarty.get.page}"
+                           class="label label-success">修改</a>
+                        <a href="javascript:" id="{$link.lid}-del" class="label label-success"
+                           onclick="return operation_one(this.id)">删除</a>
+                    </td>
+                </tr>
+                {/foreach}
+                {else}
+                <tr>
+                    <td colspan="8">暂时没有数据！</td>
+                </tr>
+                {/if}
+            </table>
+            <div class="table_action">
+                <div class="list_control fl">
+                    <a href="javascript:" id="select_all" class="btn">全选</a>
+                    <a href="javascript:" id="uncheck" class="btn">反选</a>
+                    <select class="select" id="action">
+                        <option value="">选择操作</option>
+                        <option value="del">删除</option>
+                    </select>
+                    <a href="javascript:" id="todo" class="btn">操作</a>
+                </div>
+                <div class="pagination fr">
+                    {$subpage.subpagehtml}
+                </div>
+                <div class="clr"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- /content -->
+
+{include file="_footer.htm"}
