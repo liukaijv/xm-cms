@@ -1,91 +1,101 @@
 {include file="_header.htm"}
 
 <div class="head clearfix">
-	<div class="breadcrumb fl">					
-		<a href="javascript:">首页</a> /
-		<a href="javascript:">{if $smarty.get.cate_id eq 1}友情链接{else}合作伙伴{/if}</a>									
-	</div>	
+    <div class="breadcrumb fl">
+        <a href="javascript:">首页</a> /
+        <a href="javascript:">{if $smarty.get.cate_id eq 1}友情链接{else}合作伙伴{/if}</a>
+    </div>
 </div>
 
-<!-- content -->			
+<!-- content -->
 <div class="content">
-	
-	<div class="block">
-		<form action="link.php?cate_id={$smarty.get.cate_id}&act={$smarty.get.act}&page={$smarty.get.page}&id={$smarty.get.id}" method="post" enctype="multipart/form-data">
 
-		<div class="block_hd">
-			<h2>{if $smarty.get.id}编辑{else}添加{/if}→{if $smarty.get.cate_id eq 1}友情链接{else}合作伙伴{/if}</h2>
-			<ul class="bottons fr">
-				<li>
-					<a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新" data-placement="left">
-						刷新 <span class="icon-refresh"></span>
-					</a>
-				</li>
-				<li>
-					<a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
-						收起 <span class="icon-chevron-down "></span>
-					</a>
-				</li>
-				<li>
-					<a href="javascript:" onclick="window.history.go(-1);" class="tip" data-original-title="返回" data-placement="left">
-						返回 <span class="icon-reply"></span>
-					</a>
-				</li>															
-			</ul>
-			<div class="clr"></div>	
-		</div>		
+    <div class="block">
+        <form action="link.php?cate_id={$smarty.get.cate_id}&act={$smarty.get.act}&page={$smarty.get.page}&id={$smarty.get.id}"
+              method="post" enctype="multipart/form-data">
 
-		<div class="block_bd">
-			<table class="form_table">
-				<tr>
-					<td width="12%">链接名称</td>
-					<td>
-						<input type="text" class="input_text w260" placeholder="标题" name="name" value="{$link.name}" maxlength="200">
-						<span class="help-inline">请输入标题，不能为空</span>					
-					</td>
-				</tr>
-				{if $smarty.get.cate_id eq 2}				
-				<tr>
-					<td>图片上传：</td>
-					<td>
-						<div class="upload_control">
-						<input type="text" class="input_text w140 fl disable" disabled value="图片尺寸240*240" id="filename">
-						<input type="file" class="file_upload" name="default_image"  onchange="val=this.value;$('#filename').attr('value',val);">
-						{if $link.default_image}
-						<a href="javascript:" class="btn btn_default fl w60">重新上传</a>
-						<a href="javascript:" class="btn btn_default fl w60" onclick="{literal}TINY.box.show({image:{/literal}'../{$link.default_image}'{literal},opacity:10}){/literal}">查看图片</a>
-						{else}
-						<a href="javascript:" class="btn btn_default fl w60">上传图片</a>	
-						{/if}						
-						<div class="clr"></div>
-						</div>
-					</td>
-				</tr>
-				{/if}				
-				<tr>
-					<td>链接地址</td>
-					<td>
-						<input type="text" class="input_text w260" placeholder="链接地址" name="url" value="{$link.url}" maxlength="200">					
-					</td>
-				</tr>
-				<tr>
-					<td>排序</td>
-					<td>
-						<input type="text" class="input_text w140" placeholder="排序" name="sort_order" value="{$link.sort_order|default:255}" maxlength="200">				
-					</td>
-				</tr>			
-				
-			</table>
-		</div>			
-		<div class="block_ft">
-			<div class="p5">
-			<button type="submit" class="btn btn_primary">提交</button>
-			</div>
-		</div>
+            <div class="block_hd">
+                <h2>{if $smarty.get.id}编辑{else}添加{/if}→{if $smarty.get.cate_id eq 1}友情链接{else}合作伙伴{/if}</h2>
+                <ul class="bottons fr">
+                    <li>
+                        <a href="javascript:" onclick="window.location.reload();" class="tip" data-original-title="刷新"
+                           data-placement="left">
+                            刷新 <span class="icon-refresh"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="tip block_toggle" data-original-title="收起" data-placement="left">
+                            收起 <span class="icon-chevron-down "></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="window.history.go(-1);" class="tip" data-original-title="返回"
+                           data-placement="left">
+                            返回 <span class="icon-reply"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="clr"></div>
+            </div>
 
-		</form>			
-													
-	</div>
+            <div class="block_bd">
+                <table class="form_table">
+                    <tr>
+                        <td width="12%">链接名称</td>
+                        <td>
+                            <input type="text" class="input_text w260" placeholder="标题" name="name" value="{$link.name}"
+                                   maxlength="200">
+                            <span class="help-inline">请输入标题，不能为空</span>
+                        </td>
+                    </tr>
+                    {if $smarty.get.cate_id eq 2}
+                    <tr>
+                        <td>图片上传：</td>
+                        <td>
+                            <div class="upload_control">
+                                <input type="text" class="input_text w140 fl disable" disabled value="图片尺寸240*240"
+                                       id="filename">
+                                <input type="file" class="file_upload" name="default_image"
+                                       onchange="val=this.value;$('#filename').attr('value',val);">
+                                {if $link.default_image}
+                                <a href="javascript:" class="btn btn_default fl w60">重新上传</a>
+                                <a href="javascript:" class="btn btn_default fl w60"
+                                   onclick="{literal}TINY.box.show({image:{/literal}'../{$link.default_image}'{literal},opacity:10}){/literal}">查看图片</a>
+                                {else}
+                                <a href="javascript:" class="btn btn_default fl w60">上传图片</a>
+                                {/if}
+                                <div class="clr"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    {/if}
+                    <tr>
+                        <td>链接地址</td>
+                        <td>
+                            <input type="text" class="input_text w260" placeholder="链接地址" name="url" value="{$link.url}"
+                                   maxlength="200">
+                            <span class="help-inline">格式为：http://www.baidu.com/</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>排序</td>
+                        <td>
+                            <input type="text" class="input_text w140" placeholder="排序" name="sort_order"
+                                   value="{$link.sort_order|default:255}" maxlength="200">
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="block_ft">
+                <div class="p5">
+                    <button type="submit" class="btn btn_primary">提交</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 <!-- /content -->

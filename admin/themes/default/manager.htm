@@ -51,7 +51,7 @@
                     <th>性别</th>
                     <th>邮箱</th>
                     <th>管理级别</th>
-                    <th>留言时间</th>
+                    <th>登陆时间</th>
                     <th width="80">操作</th>
                 </tr>
                 {if $admins}
@@ -79,7 +79,7 @@
                         {if $admin.type_id}普通管理员{else}<span style="color:#FF0000;">超级管理员</span>{/if}
                     </td>
                     <td>
-                        {$admin.add_time|date_format:"%Y-%m-%d %H:%M"}
+                        {$admin.last_login_time|date_format:"%Y-%m-%d %H:%M"}
                     </td>
                     <td>
                         <a href="manager.php?act=edit&id={$admin.admin_id}&page={$smarty.get.page}"

@@ -1,0 +1,32 @@
+{include file="_header.htm"}
+{include file="_sidebar.htm"}
+
+<div class="main">
+
+    <div class="main-title">{$current_menu.menu_name}</div>
+
+    <div class="pt10">
+
+        <ul class="article-list">
+            {if $data}
+            {foreach from=$data item=item}
+            <li>
+                <span class="right">{$item.add_time|date_format:"%Y-%m-%d"}</span>
+                <a href="index.php?mid={$item.menu_id}&id={$item.art_id}">{$item.art_title}</a>
+            </li>
+            {/foreach}
+            {else}
+            <li>
+                <span>没有记录</span>
+            </li>
+            {/if}
+        </ul>
+
+
+    </div>
+
+    {include file="_pager.htm"}
+
+</div>
+
+{include file="_footer.htm"}

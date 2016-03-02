@@ -1,0 +1,123 @@
+// reset
+html {
+  height: 100%;
+  font-size: 100%;
+  background-color: #fff;
+  color: #333;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-rendering: optimizelegibility;
+  -moz-osx-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100%;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+body,
+ul,
+ol,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+figure,
+form,
+fieldset,
+legend,
+input,
+textarea,
+button,
+p,
+blockquote,
+th,
+td,
+pre {
+  margin: 0;
+  padding: 0;
+}
+
+article, aside, details, figcaption, figure, footer, header, menu, nav, section, iframe {
+  display: block;
+}
+
+audio, canvas, video {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+button, input, select, textarea, optgroup {;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+
+button, input, select {
+  vertical-align: middle;
+}
+
+button::-moz-focus-inner,
+input[type='button']::-moz-focus-inner,
+input[type='reset']::-moz-focus-inner,
+input[type='submit']::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+textarea {
+  resize: vertical;
+  overflow: auto;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  padding: 0;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: inherit;
+}
+
+img {
+  height: auto;
+  vertical-align: middle;
+  border: none;
+  -ms-interpolation-mode: bicubic;
+}

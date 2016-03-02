@@ -64,16 +64,18 @@
                         <span class="ajax_edit tip" onclick="return edit(this, 'sort_order', '{$menu.menu_id}' , 'int')"
                               data-original-title="编辑">{$menu.sort_order}</span>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <!-- <a href="section.php?pid={$menu.menu_id}&act=add" class="label label-success">添加子类</a> -->
                         <a href="section.php?pid={$smarty.get.pid}&act=edit&id={$menu.menu_id}"
                            class="label label-success">编辑</a>
+                        {if $menu.can_delete}
                         {if $smarty.foreach.a.first}
                         <a href="javascript:;" id="{$menu.menu_id}-del" class="label label-success"
                            onclick="return alert('第一个栏目不能删除')">删除</a>
                         {else}
                         <a href="javascript:;" id="{$menu.menu_id}-del" class="label label-success"
                            onclick="return operation_one(this.id)">删除</a>
+                        {/if}
                         {/if}
                     </td>
                 </tr>
@@ -98,12 +100,14 @@
                         <span class="ajax_edit tip" onclick="return edit(this, 'sort_order', '{$menu.menu_id}' , 'int')"
                               data-original-title="编辑">{$menu.sort_order}</span>
                     </td>
-                    <td>
+                    <td style="text-align: right;">
                         <a href="section_all.php?pid={$menu.menu_id}&act=add" class="label label-success">添加子类</a>
                         <a href="section_all.php?pid={$menu.menu_id}&act=edit&id={$menu.menu_id}"
                            class="label label-success">编辑</a>
+                        {if $menu.can_delete}
                         <a href="javascript:;" id="{$menu.menu_id}-del" class="label label-success"
                            onclick="return operation_one(this.id)">删除</a>
+                        {/if}
                     </td>
                 </tr>
                 {/foreach}

@@ -1,0 +1,22 @@
+{include file="_header.htm"}
+{include file="_sidebar.htm"}
+
+<div class="main">
+
+    <div class="main-title">{$current_menu.menu_name}</div>
+
+    <div class="page-content">
+        <div class="article-title pt10">{$info.art_title}</div>
+        <div class="article-meta mt15">
+            来源：{$info.art_from}
+            作者：{$info.art_author}
+            发布时间：{$info.add_time|date_format:"%Y-%m-%d %H:%M:%S"}
+        </div>
+        <div class="mt10">
+            {$info.art_content}
+        </div>
+    </div>
+
+</div>
+
+{include file="_footer.htm"}

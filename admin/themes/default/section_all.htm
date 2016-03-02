@@ -58,7 +58,7 @@
                         {$menu.menu_id}
                     </td>
                     <td>
-                        {if $menu.menu_name}{$menu.menu_name}{else}N/A{/if}
+                        ├{if $menu.menu_name}{$menu.menu_name}{else}N/A{/if}
                     </td>
                     <td>
                         <span class="ajax_edit tip" onclick="return edit(this, 'menu_name_en', '{$menu.menu_id}')"
@@ -102,7 +102,7 @@
                         {$menu.menu_id}
                     </td>
                     <td>
-                        &nbsp;&nbsp;{if $menu.menu_name}{$menu.menu_name}{else}N/A{/if}
+                        &nbsp;└{if $menu.menu_name}{$menu.menu_name}{else}N/A{/if}
                     </td>
                     <td>
                         <span class="ajax_edit tip" onclick="return edit(this, 'menu_name_en', '{$menu.menu_id}')"

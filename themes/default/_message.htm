@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>
+        {if $site_title}
+        {foreach from=$site_title item=title}
+        {$title.menu_name}-
+        {/foreach}
+        {else}
+        {$CFG.site_title}
+        {/if}
+    </title>
+    <meta name="keywords" content="{$CFG.site_keyword}">
+    <meta name="description" content="{$CFG.site_description}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div class="msg_box">
+    <h2 class="f14">
+        {if $msg_type eq 0}
+        <span class="icon-question-sign"></span>
+        {elseif $msg_type eq 1}
+        <span class="icon-ok-sign"></span>
+        {else}
+        <span class="icon-info-sign"></span>
+        {/if}
+        {$msg}
+    </h2>
+
+    <p> {if $auto_jump}如果<strong id="seconds">{$time}</strong>秒后没有操作将自动跳转…{/if}</p>
+
+    <p>
+        {foreach from=$links item=link}
+        <a href="{$link.href}">{$link.text}</a>
+        {/foreach}
+    </p>
+</div>
+
+{if $auto_jump}
+<script>
+    var jump_timmer
+    var seconds = {$time};
+    var defaultUrl = "{$default_url}";
+</script>
+{literal}
+<script>
+    window.load = msg();
+    function msg() {
+        if (defaultUrl == 'javascript:history.go(-1)' && history.length == 0) {
+            document.getElementById('auto_jump').innerHTML = '';
+            return;
+        }
+        jump_timmer = setInterval(auto_jump, 1000);
+    }
+    function auto_jump() {
+        if (seconds <= 0) {
+            clearInterval(jump_timmer);
+            return;
+        }
+        seconds--;
+        document.getElementById('seconds').innerHTML = seconds;
+        if (seconds == 0) {
+            clearInterval(jump_timmer);
+            location.href = defaultUrl;
+        }
+    }
+
+</script>
+<style>
+    .msg_box {
+        font-family: simsun;
+        padding: 10px 0;
+        width: 400px;
+        margin-top: 10%;
+        border: 1px solid #5C84B1;
+        position: absolute;
+        left: 50%;
+        margin-left: -200px;
+        background: #f9f9f9;
+        font-size: 12px;
+    }
+
+    .msg_box p, .msg_box h2 {
+        text-align: center;
+        margin: 8px;
+        color: #2B587A;
+    }
+
+    .msg_box p a {
+        color: #333;
+        display: inline-block;
+        margin: 0 10px;
+        color: #2B587A;
+    }
+
+    .msg_box h2 span {
+        font-size: 14px;
+    }
+</style>
+{/literal}
+{/if}
+
+</body>
+</html>
+

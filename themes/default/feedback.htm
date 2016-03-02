@@ -1,0 +1,94 @@
+{include file="_header.htm"}
+{include file="_sidebar.htm"}
+
+<div class="main">
+
+    <div class="main-title">{$current_menu.menu_name}</div>
+
+    <div class="page-content">
+        <form method="post">
+            <table class="feedback-table">
+                <tr>
+                    <th>姓名：</th>
+                    <td><input type="text" name="name" maxlength="6"></td>
+                </tr>
+                <tr>
+                    <th>手机：</th>
+                    <td><input type="text" name="phone" maxlength="11"></td>
+                </tr>
+                <tr>
+                    <th>qq号码：</th>
+                    <td><input type="text" name="qq" maxlength="13"></td>
+                </tr>
+                <tr>
+                    <th>邮箱：</th>
+                    <td><input type="text" name="email" maxlength="32"></td>
+                </tr>
+                <tr>
+                    <th>留言内容：</th>
+                    <td>
+                        <textarea name="content" cols="50" rows="4" maxlength="200"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <input type="submit" value="提交">
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+    </div>
+
+</div>
+
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jquery.validate.min.js"></script>
+{literal}
+<script>
+    $(function () {
+
+        $('form').validate({
+//            debug: true,
+            errorElement: 'div',
+            errorClass: 'valid-error',
+            validClass: 'valid-success',
+            ignore: ":file",
+            rules: {
+                name: {
+                    required: true,
+                    userName: true
+                },
+                phone: {
+                    required: true,
+                    isMobile: true
+                },
+                qq: {
+                    qq: true
+                },
+                email: {
+                    email: true
+                }
+            },
+            messages: {
+                name: {
+                    required: '你还没有填写姓名',
+                    userName: '姓名格式不正确'
+                },
+                phone: {
+                    required: '你还没有填写手机号码',
+                    isMobile: '手机号码格式不正确'
+                },
+                qq: {
+                    qq: 'QQ号码格式不正确'
+                },
+                email: {
+                    email: '邮箱格式不正确'
+                }
+            }
+        });
+    });
+</script>
+{/literal}
+{include file="_footer.htm"}

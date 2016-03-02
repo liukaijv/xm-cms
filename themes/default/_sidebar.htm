@@ -1,0 +1,21 @@
+<div class="text-right">
+    <span class="here-path">
+        <a href="/">首页</a>
+        {foreach from=$position item=menu}
+          > <a href="{if $menu.menu_url}{$menu.menu_url}{else}index.php?mid={if $menu.link_id}{$menu.link_id}{else}{$menu.menu_id}{/if}{/if}">{$menu.menu_name}</a>
+        {/foreach}
+    </span>
+</div>
+
+<div class="sidebar left">
+    <h3 class="bar-title">{$left_title.title_zh}</h3>
+    <ul class="bar-nav">
+        {foreach from=$sub_menus item=menu}
+        <li>
+            <a class="{if $current_menu.menu_id eq $menu.menu_id}active{/if}"
+               href="{if $menu.menu_url}{$menu.menu_url}{else}index.php?mid={if $menu.link_id}{$menu.link_id}{else}{$menu.menu_id}{/if}{/if}">{$menu.menu_name}</a>
+
+        </li>
+        {/foreach}
+    </ul>
+</div>
