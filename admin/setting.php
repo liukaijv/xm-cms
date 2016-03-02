@@ -18,7 +18,7 @@ if ($act == "base") {
             'site_keyword' => $_POST['site_keyword'],
             'site_description' => $_POST['site_description'],
             'site_domain' => $_POST['site_domain'],
-            'site_copyright' => $_POST['site_copyright'],
+//            'site_copyright' => $_POST['site_copyright'],
             'site_qq' => $_POST['site_qq'],
             'service_qq' => $_POST['service_qq'],
             'site_company_address' => $_POST['site_company_address'],
