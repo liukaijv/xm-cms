@@ -82,6 +82,7 @@ $CFG['template'] = (!isset($CFG['template']) && empty($CFG['template'])) ? 'defa
 
 /* 判断请求方式 */
 define('IS_POST', (strtoupper($_SERVER['REQUEST_METHOD']) == 'POST'));
+define('IS_AJAX', (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQUESTED_WITH"]) == "xmlhttprequest"));
 
 /*初始化数据库类*/
 require(ROOT_PATH . 'includes/cls.mysql.php');
@@ -92,7 +93,7 @@ $db_host = $db_user = $db_pass = $db_name = NULL;
 
 /*引入全局公共功能函数 一些数据库操作 包括前台与后台操作*/
 require(ROOT_PATH . 'includes/front.class.php');
-$F = new Front($db, $prefix);
+$web = new Front($db, $prefix);
 
 /*后台初始化 Smarty 对象*/
 require_once(ROOT_PATH . 'includes/smarty/Smarty.class.php');
@@ -122,4 +123,3 @@ if ($_GET) {
         }
     }
 }
-?>

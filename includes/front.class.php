@@ -25,7 +25,7 @@ class Front
             if ($user_info = $this->get($conditions, "user")) {
                 return $user_info;
             } else {
-                return "";
+                return [];
             }
         }
     }
@@ -55,21 +55,22 @@ class Front
     * is_show    //是否显示
     * order      //排序
     */
-    public function get_nav($parent_id = 0, $is_show = 1, $order = 'sort_order asc,menu_id asc')
+    public function get_menus($parent_id = 0, $num = 0, $is_show = 1, $order = 'sort_order asc,menu_id asc')
     {
-
+        $where = $limit = "";
         if ($is_show == 1) {
             $where = " and is_show=1";
-        } else {
-            $where = "";
         }
         if (!$parent_id) {
             $parent_id = 0;
         }
+        if ($num > 0) {
+            $limit = "limit $num";
+        }
         $condition = "and parent_id=$parent_id" . $where;
         $sql = "select m.*,s.type_name from " . $this->prefix . "menus as m " .
             "left join " . $this->prefix . "menus_type as s on(m.type_id=s.type_id) " .
-            "where 1=1 $condition order by $order";
+            "where 1=1 $condition order by $order $limit";
 
         $menus = $this->db->getAll($sql);
         if (count($menus) > 0 && is_array($menus)) {
@@ -84,7 +85,7 @@ class Front
                 $menus[$k2]['is_show'] = $menu['is_show'];
                 $sub_menu = $this->db->getOne("select menu_id from " . $this->prefix . "menus where parent_id=" . $menu['menu_id'] . " order by $order");
                 $menus[$k2]['sub_id'] = $sub_menu['menu_id'];
-                $menus[$k2]['sub_menus'] = $this->get_nav($menu['menu_id'], $is_show);
+                $menus[$k2]['sub_menus'] = $this->get_sub_menus($menu['menu_id'], $is_show);
 
             }
 
@@ -97,7 +98,7 @@ class Front
     * is_show    //是否显示
     * order      //排序
     */
-    public function get_sub_nav($parent_id = 0, $is_show = 1, $order = 'sort_order asc,menu_id asc')
+    public function get_sub_menus($parent_id = 0, $is_show = 1, $order = 'sort_order asc,menu_id asc')
     {
         if ($is_show == 1) {
             $where = " and is_show=1";
@@ -117,14 +118,27 @@ class Front
     }
 
     /*
-    ** 递归获取最顶级栏目
+    ** 递归获取最顶级栏目ID
     */
-    public function get_top_menu($mid)
+    public function get_top_mid($mid)
     {
         if ($mid) {
             $menu = $this->get("menu_id=$mid", "menus");
             if ($menu['parent_id'] < 1) {
                 return $mid;
+            } else {
+                return $this->get_top_mid($menu['parent_id']);
+            }
+        }
+    }
+
+    // 获取顶级菜单
+    public function get_top_menu($mid)
+    {
+        if ($mid) {
+            $menu = $this->get("menu_id=$mid", "menus");
+            if ($menu['parent_id'] < 1) {
+                return $menu;
             } else {
                 return $this->get_top_menu($menu['parent_id']);
             }
@@ -132,14 +146,14 @@ class Front
     }
 
     /*
-    ** 获取上一级栏目ID
+    ** 获取上一级栏目
     */
     public function get_up_menu($mid)
     {
         if ($mid) {
             $menu = $this->get("menu_id=$mid", "menus");
-            $pid = $this->get("menu_id='" . $menu['parent_id'] . "'", "menus");
-            return $pid;
+            $parent = $this->get("menu_id='" . $menu['parent_id'] . "'", "menus");
+            return $parent;
         }
     }
 
@@ -153,16 +167,16 @@ class Front
             if ($menu['parent_id'] < 1) {
                 $sub_menu = $this->db->getOne("select menu_id from " . $this->prefix . "menus where parent_id=" . $menu['menu_id'] . " order by sort_order asc");
                 $menu['sub_id'] = $sub_menu['menu_id'];
-                return array('one' => $menu);
+                return [$menu];
             } else {
-                $top_menu = $this->get("menu_id=" . $this->get_top_menu($mid), "menus");
+                $top_menu = $this->get("menu_id=" . $this->get_top_mid($mid), "menus");
                 $sub_menu = $this->db->getOne("select menu_id from " . $this->prefix . "menus where parent_id=" . $top_menu['menu_id'] . " order by sort_order asc");
                 $parent_menu = $this->get_up_menu($mid);
                 $top_menu['sub_id'] = $sub_menu['menu_id'];
                 if ($parent_menu['parent_id'] < 1) {
-                    return array('one' => $top_menu, 'two' => $menu);
+                    return [$top_menu, $menu];
                 } else {
-                    return array('one' => $top_menu, 'two' => $parent_menu, 'three' => $menu);
+                    return [$top_menu, $parent_menu, $menu];
                 }
             }
         }
@@ -176,10 +190,10 @@ class Front
         if ($mid) {
             $menu = $this->get("menu_id=$mid", "menus");
             if ($menu['parent_id'] < 1) {
-                return array('one' => $menu, 'two' => array('menu_name' => $GLOBALS['CFG']['site_title']));
+                return [$menu, ['menu_name' => $GLOBALS['CFG']['site_title']]];
             } else {
-                $top_menu = $this->get("menu_id=" . $this->get_top_menu($mid), "menus");
-                return array('one' => $menu, 'two' => $top_menu, 'three' => array('menu_name' => $GLOBALS['CFG']['site_title']));
+                $top_menu = $this->get("menu_id=" . $this->get_top_mid($mid), "menus");
+                return [$menu, $top_menu, ['menu_name' => $GLOBALS['CFG']['site_title']]];
             }
         }
     }
@@ -189,51 +203,33 @@ class Front
     */
     public function get_tab($mid)
     {
-        $tab = '';
+        $table = '';
         if ($mid) {
             $menu = $this->get("menu_id=$mid", "menus");
             if ($menu['type_id']) {
                 switch (intval($menu['type_id'])) {
                     case '1':
-                        $tab = 'simple';
+                        $table = 'simple';
                         break;
                     case '2':
-                        $tab = 'article';
+                        $table = 'article';
                         break;
                     case '3':
-                        $tab = 'case';
+                        $table = 'pro';
                         break;
                     case '4':
-                        $tab = 'article';
+                        $table = 'case';
                         break;
                     case '5':
-                        $tab = 'article';
-                        break;
-                    case '6':
-                        $tab = 'family';
-                        break;
-                    case '7':
-                        $tab = 'article';
-                        break;
-                    case '8':
-                        $tab = 'family';
-                        break;
-                    case '9':
-                        $tab = 'active';
-                        break;
-                    case '10':
-                        $tab = 'feedback';
-                        break;
-                    case '11':
-                        $tab = 'case';
+                        $table = 'feedback';
                         break;
                     default:
-                        $tab = '';
+                        $table = '';
                         break;
                 }
             }
         }
-        return $tab;
+        return $table;
     }
 
     /*
@@ -243,34 +239,9 @@ class Front
     {
         $title_zh = $title_en = '';
         $menu = $this->get("menu_id=$top_id", "menus");
-        $tit_zh = $menu['menu_name'];
-        if ($top_id) {
-            switch (intval($top_id)) {
-                case '1':
-                    $tit_en = 'Car show';
-                    break;
-                case '2':
-                    $tit_en = 'Latest activity';
-                    break;
-                case '3':
-                    $tit_en = 'After service';
-                    break;
-                case '4':
-                    $tit_en = 'About us';
-                    break;
-                case '5':
-                    $tit_en = 'Contact us';
-                    break;
-                case '6':
-                    $tit_en = 'contact us';
-                    break;
-                case '7':
-                    $tit_en = 'contact us';
-                    break;
-                default:
-                    $tit_en = '';
-                    break;
-            }
+        if (count($menu)) {
+            $title_zh = $menu['menu_name'];
+            $title_en = $menu['menu_name_en'];
         }
         return array('title_zh' => $title_zh, 'title_en' => $title_en);
     }
@@ -284,7 +255,7 @@ class Front
         if (is_array($types) > 0) {
             return $types;
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -307,48 +278,37 @@ class Front
     * $condition   	//条件
     * $tab			//表名
     */
-    public function get($conditions, $tab)
+    public function get($conditions, $table)
     {
-        if ($conditions && $tab) {
-            return $this->db->get_info($conditions, $tab);
+        if ($conditions && $table) {
+            return $this->db->get_info($conditions, $table);
         }
     }
 
     /*
     **	获取文章
     */
-    public function get_article($mid, $tag = '', $is_first = 0, $is_recom = 0, $is_top = 0, $is_scroll = 0, $num = 0, $order = "add_time desc")
+    public function get_articles($mid, $num = 0, $is_top = 0, $is_rec = 0, $order = "add_time desc")
     {
         $where = $limit = '';
-        if ($tag) {
-            $menu = $this->get("tag='" . $tag . "'", "menus");
-            if ($menu['menu_id']) {
-                $where .= " and menu_id=" . $menu['menu_id'];
-            }
-        } elseif (is_array($mid)) {
-            $where .= " and menu_id " . db_create_in($mid) . "";
+        if (is_array($mid)) {
+            $where .= " and a.menu_id " . db_create_in($mid) . "";
         } elseif ($mid < 0) {
-            $where .= " and menu_id !=" . abs($mid) . "";
+            $where .= " and a.menu_id !=" . abs($mid) . "";
         } elseif ($mid) {
-            $where .= " and menu_id=$mid";
+            $where .= " and a.menu_id=$mid";
         }
-        if ($is_first) {
-            $where .= " and is_first=1";
-        }
-        if ($is_recom) {
-            $where .= " and is_recom=1";
+        if ($is_rec) {
+            $where .= " and a.is_recom=1";
         }
         if ($is_top) {
-            $where .= " and is_top=1";
-        }
-        if ($is_scroll) {
-            $where .= " and is_scroll=1";
+            $where .= " and a.is_top=1";
         }
         if (intval($num)) {
             $limit = " limit $num";
         }
-        $sql = "select * from " . $this->prefix . "article where 1=1 $where order by $order $limit";
-        //print_r($sql);exit;
+        $sql = "select a.*,m.menu_name from " . $this->prefix . "article as a left join " . $this->prefix . "menus as m on a.menu_id = m.menu_id  where 1=1 $where order by $order $limit";
+//        exit($sql);
         $arts = $this->db->getAll($sql);
         return $arts;
     }
@@ -356,25 +316,17 @@ class Front
     /*
     **	获取视频
     */
-    public function get_vedio($mid, $tag = '', $is_first = 0, $is_recom = 0, $is_top = 0, $num = 0, $order = "add_time desc")
+    public function get_videos($mid, $num = 0, $is_top = 0, $is_rec = 0, $order = "add_time desc")
     {
         $where = $limit = '';
-        if ($tag) {
-            $menu = $this->get("tag='" . $tag . "'", "menus");
-            if ($menu['menu_id']) {
-                $where .= " and menu_id=" . $menu['menu_id'];
-            }
-        } elseif (is_array($mid)) {
+        if (is_array($mid)) {
             $where .= " and menu_id " . db_create_in($mid) . "";
         } elseif ($mid < 0) {
             $where .= " and menu_id !=" . abs($mid) . "";
         } elseif ($mid) {
             $where .= " and menu_id=$mid";
         }
-        if ($is_first) {
-            $where .= " and is_first=1";
-        }
-        if ($is_recom) {
+        if ($is_rec) {
             $where .= " and is_recom=1";
         }
         if ($is_top) {
@@ -393,23 +345,18 @@ class Front
     /*
     **	获取案例
     */
-    public function get_case($mid, $tag = '', $is_first = 0, $is_recom, $num = 0, $order = "add_time desc")
+    public function get_cases($mid, $num = 0, $is_top = 0, $is_rec, $order = "add_time desc")
     {
         $where = $limit = '';
-        if ($tag) {
-            $menu = $this->get("tag='" . $tag . "'", "menus");
-            if ($menu['menu_id']) {
-                $where .= " and menu_id=" . $menu['menu_id'];
-            }
-        } elseif (is_array($mid)) {
+        if (is_array($mid)) {
             $where .= " and menu_id " . db_create_in($mid) . "";
         } else {
             $where .= " and menu_id=$mid";
         }
-        if ($is_first) {
-            $where .= " and is_first=1";
+        if ($is_top) {
+            $where .= " and is_top=1";
         }
-        if ($is_recom) {
+        if ($is_rec) {
             $where .= " and is_recom=1";
         }
         if (intval($num)) {
@@ -423,23 +370,18 @@ class Front
     /*
     **	获取产品
     */
-    public function get_pro($mid, $tag = '', $is_first = 0, $is_recom = 0, $num = 0, $order = "add_time desc")
+    public function get_pros($mid, $num = 0, $is_top = 0, $is_rec = 0, $order = "add_time desc")
     {
         $where = $limit = '';
-        if ($tag) {
-            $menu = $this->get("tag='" . $tag . "'", "menus");
-            if ($menu['menu_id']) {
-                $where .= " and menu_id=" . $menu['menu_id'];
-            }
-        } elseif (is_array($mid)) {
+        if (is_array($mid)) {
             $where .= " and menu_id " . db_create_in($mid) . "";
         } else {
             $where .= " and menu_id=$mid";
         }
-        if ($is_first) {
-            $where .= " and is_first=1";
+        if ($is_top) {
+            $where .= " and is_top=1";
         }
-        if ($is_recom) {
+        if ($is_rec) {
             $where .= " and is_recom=1";
         }
         if (intval($num)) {
@@ -453,31 +395,28 @@ class Front
     /*
     **	获取评论
     */
-    public function get_conmment($is_show = 0, $num = 0, $order = "add_time desc")
+    public function get_comments($is_show = 0, $num = 0, $order = "add_time desc")
     {
         $where = $limit = '';
         if ($is_show) {
-            $where .= " and is_first=1";
+            $where .= " and is_show=1";
         }
         if (intval($num)) {
             $limit = " limit $num";
         }
         $sql = "select * from " . $this->prefix . "comment where 1=1 $where order by $order $limit";
-        $commonts = $this->db->getAll($sql);
-        return $commonts;
+        $comments = $this->db->getAll($sql);
+        return $comments;
     }
 
     /*
     **	获取链接
     */
-    public function get_link($cate_id, $num = 0, $city_id = 1, $order = "sort_order asc,add_time desc")
+    public function get_links($cate_id = 1, $num = 0, $order = "sort_order asc,add_time desc")
     {
         $where = $limit = '';
         if ($cate_id = intval($cate_id)) {
             $where .= " and cate_id=$cate_id";
-        }
-        if ($city_id) {
-            $where .= " and city_id=$city_id";
         }
         if (intval($num)) {
             $limit = " limit $num";
@@ -502,15 +441,12 @@ class Front
     /*
     **	获取广告
     */
-    public function get_ad($pos_id, $num = 1, $city_id = 1)
+    public function get_ads($pos_id, $num = 5)
     {
         if (!$pos_id) {
             return;
         }
-        if (!$city_id || empty($city_id)) {
-            $city_id = 1;
-        }
-        $sql = "select a.*,p.is_blank from " . $this->prefix . "ad as a left join " . $this->prefix . "ad_pos as p on(a.pos_id=p.pos_id) where a.pos_id=$pos_id and city_id=$city_id order by a.add_time desc limit $num";
+        $sql = "select a.*,p.is_blank from " . $this->prefix . "ad as a left join " . $this->prefix . "ad_pos as p on(a.pos_id=p.pos_id) where a.pos_id=$pos_id order by a.add_time desc limit $num";
         //echo $sql;exit;
         $ads = $this->db->getAll($sql);
         return $ads;
@@ -519,7 +455,7 @@ class Front
     /*
     **	获取留言
     */
-    public function get_feedback($num, $is_check = 1)
+    public function get_messages($num, $is_check = 1)
     {
         $limit = $where = '';
         if ($num > 0) {
@@ -529,22 +465,23 @@ class Front
             $where .= " and is_check=1";
         }
         $sql = "select * from " . $this->prefix . "feedback where 1=1 $where order by add_time desc $limit";
-        $infos = $this->db->getAll($sql);
-        if (count($infos) > 0) {
-            return $infos;
+        $feeds = $this->db->getAll($sql);
+        if (count($feeds) > 0) {
+            return $feeds;
         } else {
-            return '';
+            return [];
         }
     }
 
     /*是否已缓存*/
-    public function is_Htmlcaches($page)
+    public function is_html_cached($page)
     {
+        $str = '';
         foreach ($_GET as $k => $v) {
             $str .= $k . '_' . $v . '_';
         }
         $str = md5('cache_' . $str . $page) . '.html';
-        $cache_dir = ROOT . '/temp/htmlcaches/' . $str;
+        $cache_dir = ROOT . '/temp/caches/' . $str;
         $this->htmlcaches = $cache_dir;
         if (file_exists($cache_dir)) {
             if (filemtime($cache_dir) + 0 >= time()) {
@@ -555,7 +492,7 @@ class Front
     }
 
     /*创建缓存*/
-    public function creat_Htmlcaches($content)
+    public function create_html_caches($content)
     {
         $fp = fopen($this->htmlcaches, 'w');
         @fwrite($fp, $content);
@@ -588,5 +525,3 @@ class Front
         }
     }
 }
-
-?>
