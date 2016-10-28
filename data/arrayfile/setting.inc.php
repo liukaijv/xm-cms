@@ -1,11 +1,11 @@
 <?php 
 return array (
   'site_name' => '',
-  'site_title' => '合肥瑞德人力资源有限公司',
+  'site_title' => '测试站点',
   'site_keyword' => '测试站点',
   'site_description' => '测试站点',
-  'site_domain' => 'demo.com',
-  'site_copyright' => '皖ICP备12000109号 ',
+  'site_domain' => 'www.example.com',
+  'site_copyright' => '川ICP备12000109号 ',
   'site_tel' => '000-0000000',
   'site_fax' => '000-0000000',
   'site_email' => '89016230@qq.com',
@@ -39,7 +39,7 @@ return array (
   ),
   'html' => '0',
   'site_qq' => '',
-  'site_company_address' => '合肥市蜀山区长江西路与潜山路交口丰乐大厦2号楼A座1003',
+  'site_company_address' => '成都天府广场',
   'author_name' => '',
   'author_pwd' => '',
   'site_phone' => '00000000000',

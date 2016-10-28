@@ -4,13 +4,13 @@
 $db_host = "localhost";
 
 // database name
-$db_name = "fanjin";
+$db_name = "xm-cms";
 
 // database username
 $db_user = "root";
 
 // database password
-$db_pass = "ybbipqtbl";
+$db_pass = "root";
 
 // table prefix
 $prefix = "xm_";
